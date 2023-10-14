@@ -13,14 +13,6 @@ public class CalcolatriceRPN {
         return notazionePostfissa;
     }
 
-    public void setNotazioneInfissa(String notazioneInfissa) {
-        this.notazioneInfissa = notazioneInfissa;
-    }
-
-    public void setNotazionePostfissa(String notazionePostfissa) {
-        this.notazionePostfissa = notazionePostfissa;
-    }
-
     private boolean isNumber(char c) {
         if (c == '0' || c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7'
                 || c == '8' || c == '9') {
@@ -61,7 +53,8 @@ public class CalcolatriceRPN {
         return result.toString();
     }
 
-    public void trasformaInPostfissa() {
+    private void trasformaInPostfissa(String input) {
+        notazioneInfissa = input;
         Stack<Character> operatori = new Stack<>();
         Stack<Character> risultato = new Stack<>();
 
@@ -89,5 +82,35 @@ public class CalcolatriceRPN {
         }
 
         notazionePostfissa = outputToString(risultato);
+    }
+    public String calcola(boolean isPostfissa, String input) {
+        if (!isPostfissa) {
+            trasformaInPostfissa(input);
+        }
+        Stack<Double> risultato = new Stack<>();
+        for (int i = 0; i < notazionePostfissa.length(); i++) {
+            char c = notazionePostfissa.charAt(i);
+            if (isNumber(c)) {
+                risultato.push(Double.parseDouble(String.valueOf(c)));
+            } else if (isOperator(c)) {
+                double a = risultato.pop();
+                double b = risultato.pop();
+                switch (c) {
+                    case '+':
+                        risultato.push(b + a);
+                        break;
+                    case '-':
+                        risultato.push(b - a);
+                        break;
+                    case '*':
+                        risultato.push(b * a);
+                        break;
+                    case '/':
+                        risultato.push(b / a);
+                        break;
+                }
+            }
+        }
+        return String.valueOf(risultato.pop());
     }
 }

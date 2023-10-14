@@ -92,9 +92,9 @@ public class Calcolatrice {
             }
         });
         btnUguale.addActionListener(e -> {
-            calcolatrice.setNotazioneInfissa(display.getText());
-            calcolatrice.trasformaInPostfissa();
-            display.setText(calcolatrice.getNotazionePostfissa());
+            boolean isRPN = checkBox1.isSelected();
+            String text = display.getText();
+            display.setText(calcolatrice.calcola(isRPN, text));
         });
     }
     public static void main(String[] args) {

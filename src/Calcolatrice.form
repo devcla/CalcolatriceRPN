@@ -260,6 +260,7 @@
             </constraints>
             <properties>
               <background color="-14145496"/>
+              <focusable value="false"/>
               <font size="18"/>
               <foreground color="-1"/>
               <label value="("/>
@@ -272,6 +273,7 @@
             </constraints>
             <properties>
               <background color="-14145496"/>
+              <focusable value="false"/>
               <font size="18"/>
               <foreground color="-1"/>
               <label value=")"/>
@@ -286,7 +288,7 @@
               <background color="-14145496"/>
               <borderPainted value="true"/>
               <focusPainted value="true"/>
-              <focusable value="true"/>
+              <focusable value="false"/>
               <font size="16"/>
               <foreground color="-1"/>
               <label value="AC"/>
@@ -299,6 +301,7 @@
             </constraints>
             <properties>
               <background color="-14145496"/>
+              <focusable value="false"/>
               <font size="18"/>
               <foreground color="-1"/>
               <label value="C"/>
