@@ -1,42 +1,22 @@
+import java.util.Objects;
 import java.util.Stack;
 
 public class CalcolatriceRPN {
-    private String notazioneInfissa;
-    private String notazionePostfissa;
     public CalcolatriceRPN() {}
-
-    public String getNotazioneInfissa() {
-        return notazioneInfissa;
+    private static boolean isNumber(String c) {
+        return c.equals("0") || c.equals("1") || c.equals("2") || c.equals("3") || c.equals("4") || c.equals("5")
+                || c.equals("6") || c.equals("7") || c.equals("8") || c.equals("9");
     }
 
-    public String getNotazionePostfissa() {
-        return notazionePostfissa;
+    private static boolean isOperator(String c) {
+        return c.equals("+") || c.equals("-") || c.equals("*") || c.equals("/");
     }
 
-    private boolean isNumber(char c) {
-        if (c == '0' || c == '1' || c == '2' || c == '3' || c == '4' || c == '5' || c == '6' || c == '7'
-                || c == '8' || c == '9') {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    private boolean isOperator(char c) {
-        if (c == '+' || c == '-' || c == '*' || c == '/') {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    private int getPriority(char c) {
-        if (c == '+' || c == '-') {
+    private static int getPriority(String c) {
+        if (c.equals("+") || c.equals("-")) {
             return 1;
         }
-        else if (c == '*' || c == '/') {
+        else if (c.equals("*") || c.equals("/")) {
             return 2;
         }
         else {
@@ -44,36 +24,36 @@ public class CalcolatriceRPN {
         }
     }
 
-    private String outputToString(Stack<Character> output) {
-        StringBuilder result = new StringBuilder();
-        while (!output.isEmpty()) {
-            Character element = output.pop();
-            result.insert(0, element);
+    private static boolean isNumberOrDecimal(String token) {
+        try {
+            // provo a convertire il token in un numero
+            Double.parseDouble(token);
+            return true;
+        } catch (NumberFormatException e) {
+            // se la conversione fallisce vuol dire che non e un numero convertibile quindi sara un operatore o parentesi
+            return false;
         }
-        return result.toString();
     }
+    private static String trasformaInPostfissa(String input) {
+        Stack<String> operatori = new Stack<>();
+        Stack<String> risultato = new Stack<>();
+        String[] tokens = input.split("\\s+"); //splitto la stringa in base agli spazi
 
-    private void trasformaInPostfissa(String input) {
-        notazioneInfissa = input;
-        Stack<Character> operatori = new Stack<>();
-        Stack<Character> risultato = new Stack<>();
-
-        for (int i = 0; i < notazioneInfissa.length(); i++) {
-            char c = notazioneInfissa.charAt(i);
-            if (isNumber(c)) {
-                risultato.push(c);
-            } else if (c == '(') {
-                operatori.push(c);
-            } else if (c == ')') {
-                while (operatori.peek() != '(') {
+        for (String token : tokens) {
+            if (isNumberOrDecimal(token)) {
+                risultato.push(token);
+            } else if (token.equals("(")) {
+                operatori.push(token);
+            } else if (token.equals(")")) {
+                while (!Objects.equals(operatori.peek(), "(")) {
                     risultato.push(operatori.pop());
                 }
                 operatori.pop();
-            } else if (isOperator(c)) {
-                while (!operatori.isEmpty() && getPriority(c) <= getPriority(operatori.peek())) {
+            } else if (isOperator(token)) {
+                while (!operatori.isEmpty() && getPriority(token) <= getPriority(operatori.peek())) {
                     risultato.push(operatori.pop());
                 }
-                operatori.push(c);
+                operatori.push(token);
             }
         }
 
@@ -81,35 +61,50 @@ public class CalcolatriceRPN {
             risultato.push(operatori.pop());
         }
 
-        notazionePostfissa = outputToString(risultato);
+        StringBuilder rpnExpression = new StringBuilder();
+        for (String token : risultato) {
+            rpnExpression.append(token).append(" ");
+        }
+
+        return rpnExpression.toString().trim();
     }
-    public String calcola(boolean isPostfissa, String input) {
+    public static String calcola(boolean isPostfissa, String input) throws ArithmeticException {
+        String[] tokens;
         if (!isPostfissa) {
-            trasformaInPostfissa(input);
+            tokens = trasformaInPostfissa(input).split("\\s+");
+        }
+        else {
+            tokens = input.split("\\s+");
         }
         Stack<Double> risultato = new Stack<>();
-        for (int i = 0; i < notazionePostfissa.length(); i++) {
-            char c = notazionePostfissa.charAt(i);
-            if (isNumber(c)) {
-                risultato.push(Double.parseDouble(String.valueOf(c)));
-            } else if (isOperator(c)) {
-                double a = risultato.pop();
-                double b = risultato.pop();
-                switch (c) {
-                    case '+':
-                        risultato.push(b + a);
-                        break;
-                    case '-':
-                        risultato.push(b - a);
-                        break;
-                    case '*':
-                        risultato.push(b * a);
-                        break;
-                    case '/':
-                        risultato.push(b / a);
-                        break;
+        try {
+            for (String token : tokens) {
+                if (isNumberOrDecimal(token)) {
+                    risultato.push(Double.parseDouble(String.valueOf(token)));
+                } else if (isOperator(token)) {
+                    double a = risultato.pop();
+                    double b = risultato.pop();
+                    switch (token) {
+                        case "+":
+                            risultato.push(b + a);
+                            break;
+                        case "-":
+                            risultato.push(b - a);
+                            break;
+                        case "*":
+                            risultato.push(b * a);
+                            break;
+                        case "/":
+                            if (a == 0) {
+                                throw new ArithmeticException("Divisione per 0 non consentita");
+                            }
+                            risultato.push(b / a);
+                            break;
+                    }
                 }
             }
+        } catch (Exception e) {
+            throw new ArithmeticException("Espressione non valida");
         }
         return String.valueOf(risultato.pop());
     }

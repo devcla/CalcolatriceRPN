@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="calcolatrice-rpn:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/calcolatrice_rpn_jar</output-path>
+    <root id="archive" name="calcolatrice-rpn.jar">
+      <element id="module-output" name="calcolatrice-rpn" />
+    </root>
+  </artifact>
+</component>

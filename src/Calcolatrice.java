@@ -27,64 +27,25 @@ public class Calcolatrice {
     private JCheckBox checkBox1;
     private JButton btnC;
     private JButton btnAc;
-    private CalcolatriceRPN calcolatrice;
     public Calcolatrice() {
-        calcolatrice = new CalcolatriceRPN();
-
-        btnZero.addActionListener(e -> {
-            display.setText(display.getText() + "0");
-        });
-        btnUno.addActionListener(e -> {
-            display.setText(display.getText() + "1");
-        });
-        btnDue.addActionListener(e -> {
-            display.setText(display.getText() + "2");
-        });
-        btnTre.addActionListener(e -> {
-            display.setText(display.getText() + "3");
-        });
-        btnQuattro.addActionListener(e -> {
-            display.setText(display.getText() + "4");
-        });
-        btnCinque.addActionListener(e -> {
-            display.setText(display.getText() + "5");
-        });
-        btnSei.addActionListener(e -> {
-            display.setText(display.getText() + "6");
-        });
-        btnSette.addActionListener(e -> {
-            display.setText(display.getText() + "7");
-        });
-        btnOtto.addActionListener(e -> {
-            display.setText(display.getText() + "8");
-        });
-        btnNove.addActionListener(e -> {
-            display.setText(display.getText() + "9");
-        });
-        btnPunto.addActionListener(e -> {
-            display.setText(display.getText() + ".");
-        });
-        btnPiu.addActionListener(e -> {
-            display.setText(display.getText() + "+");
-        });
-        btnMeno.addActionListener(e -> {
-            display.setText(display.getText() + "-");
-        });
-        btnPer.addActionListener(e -> {
-            display.setText(display.getText() + "*");
-        });
-        btnDiviso.addActionListener(e -> {
-            display.setText(display.getText() + "/");
-        });
-        btnAperta.addActionListener(e -> {
-            display.setText(display.getText() + "(");
-        });
-        btnChiusa.addActionListener(e -> {
-            display.setText(display.getText() + ")");
-        });
-        btnAc.addActionListener(e -> {
-            display.setText("");
-        });
+        btnZero.addActionListener(e -> display.setText(display.getText() + "0"));
+        btnUno.addActionListener(e -> display.setText(display.getText() + "1"));
+        btnDue.addActionListener(e -> display.setText(display.getText() + "2"));
+        btnTre.addActionListener(e -> display.setText(display.getText() + "3"));
+        btnQuattro.addActionListener(e -> display.setText(display.getText() + "4"));
+        btnCinque.addActionListener(e -> display.setText(display.getText() + "5"));
+        btnSei.addActionListener(e -> display.setText(display.getText() + "6"));
+        btnSette.addActionListener(e -> display.setText(display.getText() + "7"));
+        btnOtto.addActionListener(e -> display.setText(display.getText() + "8"));
+        btnNove.addActionListener(e -> display.setText(display.getText() + "9"));
+        btnPunto.addActionListener(e -> display.setText(display.getText() + "."));
+        btnPiu.addActionListener(e -> display.setText(display.getText() + " + "));
+        btnMeno.addActionListener(e -> display.setText(display.getText() + " - "));
+        btnPer.addActionListener(e -> display.setText(display.getText() + " * "));
+        btnDiviso.addActionListener(e -> display.setText(display.getText() + " / "));
+        btnAperta.addActionListener(e -> display.setText(display.getText() + " ( "));
+        btnChiusa.addActionListener(e -> display.setText(display.getText() + " ) "));
+        btnAc.addActionListener(e -> display.setText(""));
         btnC.addActionListener(e -> {
             String text = display.getText();
             if (!text.isEmpty()) {
@@ -92,9 +53,16 @@ public class Calcolatrice {
             }
         });
         btnUguale.addActionListener(e -> {
+            if(display.getText().isEmpty()) {
+                return;
+            }
             boolean isRPN = checkBox1.isSelected();
             String text = display.getText();
-            display.setText(calcolatrice.calcola(isRPN, text));
+            try {
+                display.setText(CalcolatriceRPN.calcola(isRPN, text));
+            } catch (ArithmeticException a) {
+                display.setText(a.getMessage());
+            }
         });
     }
     public static void main(String[] args) {
