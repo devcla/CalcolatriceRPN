@@ -27,7 +27,23 @@ public class Calcolatrice {
     private JCheckBox checkBox1;
     private JButton btnC;
     private JButton btnAc;
+    private JPanel spaceContainer;
+    private JButton btnSpace;
+
     public Calcolatrice() {
+        if(!checkBox1.isSelected()) {
+            btnSpace.setVisible(false);
+            spaceContainer.setVisible(false);
+        }
+        checkBox1.addActionListener(e -> {
+            if (!checkBox1.isSelected()) {
+                btnSpace.setVisible(false);
+                spaceContainer.setVisible(false);
+            } else if(checkBox1.isSelected()) {
+                btnSpace.setVisible(true);
+                spaceContainer.setVisible(true);
+            }
+        });
         btnZero.addActionListener(e -> display.setText(display.getText() + "0"));
         btnUno.addActionListener(e -> display.setText(display.getText() + "1"));
         btnDue.addActionListener(e -> display.setText(display.getText() + "2"));
@@ -46,6 +62,7 @@ public class Calcolatrice {
         btnAperta.addActionListener(e -> display.setText(display.getText() + " ( "));
         btnChiusa.addActionListener(e -> display.setText(display.getText() + " ) "));
         btnAc.addActionListener(e -> display.setText(""));
+        btnSpace.addActionListener(e -> display.setText(display.getText() + " "));
         btnC.addActionListener(e -> {
             String text = display.getText();
             if (!text.isEmpty()) {
@@ -71,7 +88,7 @@ public class Calcolatrice {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setLocationRelativeTo(null);
-        frame.setMinimumSize(new Dimension(450, 400));
+        frame.setMinimumSize(new Dimension(650, 500));
         frame.setVisible(true);
     }
 
